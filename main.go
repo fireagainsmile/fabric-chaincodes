@@ -1,6 +1,8 @@
 package main
 
-import "github.com/hyperledger/fabric-contract-api-go/contractapi"
+import (
+	"github.com/hyperledger/fabric-contract-api-go/contractapi"
+)
 
 func main(){
 	sc := new(SimpleContract)

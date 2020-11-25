@@ -43,8 +43,8 @@ func (s *SimpleContract)ListOrders() string {
 	return s.users.ListOrders()
 }
 
-func (s *SimpleContract)ConfirmOrder(want, id string)  {
-	s.users.ConfirmOrder(want, id)
+func (s *SimpleContract)ConfirmOrder(res, id string)  {
+	s.users.ConfirmOrder(res, id)
 }
 
 // restaurant interfaces

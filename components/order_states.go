@@ -89,6 +89,7 @@ func (s *StateTemplate)StateHandler(op, message string) error  {
 			}
 		}
 	}
+	s.Update()
 
 	return nil
 }

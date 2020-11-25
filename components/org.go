@@ -82,11 +82,8 @@ func (o *Org)DeliverOrder(want string, resId string) *OrderEvent {
 }
 
 // confirm order for users
-func (o *Org)ConfirmOrder(want string, orderId string)  {
-	OrderInfo := strings.Split(want, ":")
-	resId := OrderInfo[0]
-
-	restaurant, ok := o.resInfo[resId]
+func (o *Org)ConfirmOrder(resid string, orderId string)  {
+	restaurant, ok := o.resInfo[resid]
 	if !ok {
 		fmt.Println("no matched restaurant found")
 		return
