@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/fireagainsmile/golangLearning/fabric-chaincodes/components"
+	"github.com/fireagainsmile/fabric-chaincodes/components"
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
 )
 
