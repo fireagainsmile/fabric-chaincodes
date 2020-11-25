@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/fireagainsmile/fabric-chaincodes/components"
+	"github.com/fireagainsmile/golangLearning/fabric-chaincodes/components"
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
 )
 
@@ -35,8 +35,8 @@ func (s *SimpleContract)GetRestaurantName(id string) string  {
 }
 
 //user interfaces
-func (s *SimpleContract)CommitOrder(want string) error {
-	return s.users.CommitOrder(want)
+func (s *SimpleContract)CommitOrder(want ,resId string) error {
+	return s.users.CommitOrder(want, resId)
 }
 
 func (s *SimpleContract)ListOrders() string {

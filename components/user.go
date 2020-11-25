@@ -61,18 +61,18 @@ func (u *User) watch(oe *OrderEvent)  {
 
 // functions used between modules
 // communication between different modules
-func (u *User)sendOrder(message string)  *OrderEvent{
+func (u *User)sendOrder(message , resId string)  *OrderEvent{
 	// todo channel communication
-	return DefaultOrg.DeliverOrder(message)
+	return DefaultOrg.DeliverOrder(message, resId)
 }
 
 
 
 //  interfaces for users module
-func (u *User)CommitOrder(want string) error {
+func (u *User)CommitOrder(want,  resId string) error {
 	u.rulesCheck()
 	//OE := u.SentOrder(want)
-	oe := u.sendOrder(want)
+	oe := u.sendOrder(want, resId)
 	if oe == nil {
 		return errors.New("failed to create order")
 	}

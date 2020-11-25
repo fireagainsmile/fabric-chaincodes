@@ -14,6 +14,7 @@ type OrderEvent struct {
 	OrderDetail string
 	CurrentState StateHandlerInterface
 	Done chan struct{}
+	Err error
 }
 
 func NewOrderEvent(or string) *OrderEvent {
@@ -28,7 +29,10 @@ func NewOrderEvent(or string) *OrderEvent {
 }
 
 func (o *OrderEvent)HandleEvent(op , event string) *OrderEvent {
-	o.CurrentState.StateHandler(op, event)
+	err :=o.CurrentState.StateHandler(op, event)
+	if err != nil {
+		o.Err = err
+	}
 	if o.CurrentState.IsFinished() {
 		next := o.CurrentState.Next()
 		if next == nil {

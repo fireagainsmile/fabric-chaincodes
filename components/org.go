@@ -1,6 +1,7 @@
 package components
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 )
@@ -27,7 +28,7 @@ func NewOrg() *Org  {
 // functions used by restaurant
 // register restaurant
 func (o *Org)RegisterRestaurant(name string) *Org {
-	id := generateOrderID()
+	id := randn(10)
 	resID := fmt.Sprintf("shop-%s",id)
 	res := NewRestaurant(name, resID)
 	var resInfo restaurantInfo
@@ -68,16 +69,14 @@ func (o *Org)GetRestaurant(id string) *Restaurant {
 
 // restaurant operations
 // commit an order
-func (o *Org)DeliverOrder(want string) *OrderEvent {
-	OrderInfo := strings.Split(want, ":")
-	resId := OrderInfo[0]
+func (o *Org)DeliverOrder(want string, resId string) *OrderEvent {
+	oe := NewOrderEvent(want)
 
 	restaurant, ok := o.resInfo[resId]
 	if !ok {
-		fmt.Println("no matched restaurant found")
-		return nil
+		oe.Err = errors.New("can not find matched restaurant! ")
+		return oe
 	}
-	oe := NewOrderEvent(OrderInfo[1])
 	restaurant.r.AddOrder(oe)
 	return  oe
 }
