@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"strings"
-	"time"
 )
 
 type HosuseID int
@@ -44,20 +43,20 @@ func requireAuth()  {
 	fmt.Println("Checking auth here")
 }
 // go routine listening events when order is committed
-func (u *User) watch(oe *OrderEvent)  {
-	for  {
-		select {
-		case m := <- oe.Done:
-			fmt.Println("received message", m)
-			delete(u.orders, oe.ID)
-			return
-		default:
-			time.Sleep(10*time.Second)
-
-		}
-
-	}
-}
+//func (u *User) watch(oe *OrderEvent)  {
+//	for  {
+//		select {
+//		case m := <- oe.Done:
+//			fmt.Println("received message", m)
+//			delete(u.orders, oe.ID)
+//			return
+//		default:
+//			time.Sleep(10*time.Second)
+//
+//		}
+//
+//	}
+//}
 
 // functions used between modules
 // communication between different modules
@@ -77,7 +76,6 @@ func (u *User)CommitOrder(want,  resId string) error {
 		return errors.New("failed to create order")
 	}
 	u.orders[oe.ID] = oe
-	go u.watch(oe)
 	return nil
 }
 

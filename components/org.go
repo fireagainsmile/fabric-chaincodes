@@ -1,7 +1,6 @@
 package components
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 )
@@ -17,6 +16,7 @@ type restaurantInfo struct {
 
 type Org struct {
 	resInfo map[string] restaurantInfo
+	order *OrderEvent
 }
 
 func NewOrg() *Org  {
@@ -71,26 +71,18 @@ func (o *Org)GetRestaurant(id string) *Restaurant {
 // commit an order
 func (o *Org)DeliverOrder(want string, resId string) *OrderEvent {
 	oe := NewOrderEvent(want)
-
-	restaurant, ok := o.resInfo[resId]
-	if !ok {
-		oe.Err = errors.New("can not find matched restaurant! ")
-		return oe
-	}
-	restaurant.r.AddOrder(oe)
+	o.order = oe
 	return  oe
 }
 
 // confirm order for users
 func (o *Org)ConfirmOrder(resid string, orderId string)  {
-	restaurant, ok := o.resInfo[resid]
-	if !ok {
-		fmt.Println("no matched restaurant found")
-		return
-	}
-	restaurant.r.RemoveOrder(orderId)
+	o.order = nil
 }
 
+func (o *Org)ServeOrder(op, message string)  {
+	o.order.HandleEvent(op, message)
+}
 
 // cancel an order
 // remove an order...

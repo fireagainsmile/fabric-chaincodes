@@ -31,7 +31,6 @@ func (s *SimpleContract)ListRestaurant()  string{
 }
 
 func (s *SimpleContract)GetRestaurantName(id string) string  {
-	return s.org.GetRestaurant(id).Name
 }
 
 //user interfaces
@@ -48,13 +47,12 @@ func (s *SimpleContract)ConfirmOrder(res, id string)  {
 }
 
 // restaurant interfaces
-func (s *SimpleContract)QueryOderInfo(resId, orderId string) (string,error) {
-	res := s.org.GetRestaurant(resId)
-	return res.QueryOrderInfo(orderId)
+func (s *SimpleContract)QueryOderInfo() (string,error) {
+	return  s.Name, nil
 }
 
-func (s *SimpleContract)ServeOder(resId, orderId, op, message string) error {
-	res := s.org.GetRestaurant(resId)
-	return res.ServeOrder(orderId, op, message)
+func (s *SimpleContract)ServeOder(op, message string) error {
+	s.org.ServeOrder(op, message)
+	return nil
 }
 
