@@ -29,18 +29,18 @@ func (s *SimpleContract)GetStatus() string {
 	}
 }
 
-func (s *SimpleContract)ConfirmOrder(id string) string {
+func (s *SimpleContract)ConfirmOrder(id string)  {
 	if s.or == nil {
 		fmt.Println("No order at the moment")
-		return "done"
+		return 
 	}
 	if s.or.ID == id{
 		s.or = nil
 		fmt.Println(id, ":Order Confirmed")
-		return "confirmed"
+		return
 	}else {
 		fmt.Println("no match order found")
-		return "no matched found"
+		return
 	}
 }
 
