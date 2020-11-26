@@ -1,11 +1,20 @@
 package components
 
 import (
+	"errors"
 	"fmt"
 	"time"
 )
 
+type InterfaceState int
 
+const (
+	Open InterfaceState = iota + 1
+	BlockSub
+	ReadyForSub
+	Closed
+	SubClosed
+)
 
 // handler interface for different states
 type StateHandlerInterface interface {
@@ -14,6 +23,7 @@ type StateHandlerInterface interface {
 	Subs() []StateHandlerInterface
 	IsFinished() bool
 	Name() string
+	GetInterfaceState() InterfaceState
 	Update()
 }
 
@@ -24,6 +34,7 @@ type StateTemplate struct {
 	done bool
 	subStates []StateHandlerInterface
 	ThreshHold int
+	state InterfaceState
 	next StateHandlerInterface
 	handler func(op, message string) error
 }
@@ -34,6 +45,7 @@ func NewStateTemplate(op string, threshHold int) *StateTemplate {
 		op: op,
 		subStates: subs,
 		ThreshHold: threshHold,
+		state: Open,
 	}
 }
 
@@ -70,13 +82,23 @@ func (s *StateTemplate) Next() StateHandlerInterface  {
 	return s.next
 }
 
+func (s *StateTemplate)GetInterfaceState() InterfaceState {
+	return s.state
+}
+
 func (s *StateTemplate)StateHandler(op, message string) error  {
 	if s.op == op {
+		if !s.isReadyForCurr(){
+			return errors.New("can not proceed any transaction at this moment! ")
+		}
 		s.log = fmt.Sprintf("%s info: received message %s", time.Now().String(), message)
 		if s.handler != nil {
 			return s.handler(op, message)
 		}
 		s.Update()
+	}
+	if !s.isReadyForSubs(){
+		return errors.New("can not handle sub operation! ")
 	}
 	subs := s.Subs()
 	if len(subs) != 0 {
@@ -114,6 +136,20 @@ func (s *StateTemplate)Update() {
 			s.done = true
 		}
 	}
+}
+
+func (s *StateTemplate)isReadyForCurr() bool {
+	if s.state != Closed{
+		return true
+	}
+	return false
+}
+
+func (s *StateTemplate)isReadyForSubs() bool {
+	if s.state != BlockSub{
+		return true
+	}
+	return false
 }
 
 func checkAll(handlerInterface StateHandlerInterface) bool {
