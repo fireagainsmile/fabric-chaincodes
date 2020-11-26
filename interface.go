@@ -31,12 +31,17 @@ func (s *SimpleContract)GetStatus() string {
 
 func (s *SimpleContract)ConfirmOrder(id string) string {
 	if s.or == nil {
-		return fmt.Sprintf("no order ongoing at this moment")
+		fmt.Println("No order at the moment")
+		return "done"
 	}
-	if s.or.ID != id {
-		return fmt.Sprintf("no matched order found")
+	if s.or.ID == id{
+		s.or = nil
+		fmt.Println(id, ":Order Confirmed")
+		return "confirmed"
+	}else {
+		fmt.Println("no match order found")
+		return "no matched found"
 	}
-	return "Confirmed"
 }
 
 func (s *SimpleContract)ServeOder(op, message string) error {
