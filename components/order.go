@@ -61,7 +61,7 @@ func (o *BusinessOrder)GetStatus() string {
 	if o.CurrentState != nil {
 		return o.CurrentState.Name()
 	}
-	return "all done"
+	return "waiting for confirmation"
 }
 
 // help functions
