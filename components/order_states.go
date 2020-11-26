@@ -73,6 +73,7 @@ func (s *StateTemplate) Next() StateHandlerInterface  {
 
 func (s *StateTemplate)StateHandler(op, message string) error  {
 	EventCheck(message)
+	var changed bool
 	if s.done {
 		fmt.Println("All done, nothing to do here")
 		return  errors.New("nothing to do here")
@@ -80,16 +81,18 @@ func (s *StateTemplate)StateHandler(op, message string) error  {
 	if s.op == op {
 		s.log = fmt.Sprintf("%s info: received message %s", time.Now().String(), message)
 		if s.handler != nil {
-			return s.handler(op, message)
+			s.handler(op, message)
+			changed = true
 		}
-		s.Update()
+		if changed{
+			s.Update()
+			return nil
+		}
 	}
 	subs := s.Subs()
-	var matched bool
 	if len(subs) != 0 {
 		for _, ss := range subs{
 			if ss.Name() == op {
-				matched = true
 				if ss.IsFinished() {
 					fmt.Println("Sub operation is done!")
 					return errors.New("Sub operation is already finished! ")
@@ -98,10 +101,11 @@ func (s *StateTemplate)StateHandler(op, message string) error  {
 					return err
 				}
 				ss.Update()
+				changed = true
 			}
 		}
 	}
-	if matched {
+	if changed {
 		s.Update()
 		return nil
 	}else {
