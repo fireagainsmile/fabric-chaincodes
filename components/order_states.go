@@ -82,8 +82,9 @@ func (s *StateTemplate)StateHandler(op, message string) error  {
 		s.log = fmt.Sprintf("%s info: received message %s", time.Now().String(), message)
 		if s.handler != nil {
 			s.handler(op, message)
-			changed = true
+
 		}
+		changed = true
 		if changed{
 			s.Update()
 			return nil
