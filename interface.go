@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/fireagainsmile/fabric-chaincodes/components"
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
 )
@@ -28,8 +29,15 @@ func (s *SimpleContract)GetStatus() string {
 	}
 }
 
-func (s *SimpleContract)ConfirmOrder(res, id string)  {
-	s.or = nil
+func (s *SimpleContract)ConfirmOrder(id string) string {
+	if s.or == nil {
+		return fmt.Sprintf("no order ongoing at this moment")
+	}
+	if s.or.ID != id {
+		return fmt.Sprintf("no matched order found")
+	}
+	s.or = nil 
+	return "Confirmed"
 }
 
 func (s *SimpleContract)ServeOder(op, message string) error {
