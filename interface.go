@@ -27,7 +27,7 @@ func (s *SimpleContract)ListOrders() string {
 
 func (s *SimpleContract)GetStatus() string {
 	if s.or != nil {
-		return s.or.CurrentState.Name()
+		return s.or.GetStatus()
 	}else {
 		return "Done"
 	}
