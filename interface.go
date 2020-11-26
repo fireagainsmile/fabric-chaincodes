@@ -36,7 +36,6 @@ func (s *SimpleContract)ConfirmOrder(id string) string {
 	if s.or.ID != id {
 		return fmt.Sprintf("no matched order found")
 	}
-	s.or = nil
 	return "Confirmed"
 }
 
