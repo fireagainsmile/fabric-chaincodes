@@ -20,6 +20,14 @@ func (s *SimpleContract)ListOrders() string {
 	return s.or.ID
 }
 
+func (s *SimpleContract)GetStatus() string {
+	if s.or != nil {
+		return s.or.GetStatus()
+	}else {
+		return "Done"
+	}
+}
+
 func (s *SimpleContract)ConfirmOrder(res, id string)  {
 	s.or = nil
 }

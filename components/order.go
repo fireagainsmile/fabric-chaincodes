@@ -57,6 +57,13 @@ func (o *BusinessOrder)IsFinished() bool {
 	return o.CurrentState == nil
 }
 
+func (o *BusinessOrder)GetStatus() string {
+	if o.CurrentState != nil {
+		return o.CurrentState.Name()
+	}
+	return "all done"
+}
+
 // help functions
 func generateOrderID() string {
 	return fmt.Sprintf("order-%s", randn(10))
