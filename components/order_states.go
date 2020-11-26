@@ -1,6 +1,7 @@
 package components
 
 import (
+	"errors"
 	"fmt"
 	"time"
 )
@@ -71,6 +72,11 @@ func (s *StateTemplate) Next() StateHandlerInterface  {
 }
 
 func (s *StateTemplate)StateHandler(op, message string) error  {
+	EventCheck(message)
+	if s.done {
+		fmt.Println("All done, nothing to do here")
+		return  errors.New("nothing to do here")
+	}
 	if s.op == op {
 		s.log = fmt.Sprintf("%s info: received message %s", time.Now().String(), message)
 		if s.handler != nil {
@@ -82,6 +88,10 @@ func (s *StateTemplate)StateHandler(op, message string) error  {
 	if len(subs) != 0 {
 		for _, ss := range subs{
 			if ss.Name() == op {
+				if ss.IsFinished() {
+					fmt.Println("Sub operation is done!")
+					return errors.New("Sub operation is already finished! ")
+				}
 				if err := ss.StateHandler(op, message); err != nil {
 					return err
 				}
@@ -150,7 +160,7 @@ func checkN(handlerInterface StateHandlerInterface, n int) bool {
 
 // business logic here
 func GenerateStates() *StateTemplate {
-	initState := NewStateTemplate("init", -1)
+	initState := NewStateTemplate("initialized", -1)
 	waterState := NewStateTemplate("water", 0)
 	flourState := NewStateTemplate("flour", 0)
 	initState.AddSubs(waterState, flourState)
@@ -160,7 +170,7 @@ func GenerateStates() *StateTemplate {
 	}
 	initState.SetHandler(f)
 
-	cookState := NewStateTemplate("cook", 1)
+	cookState := NewStateTemplate("waitingCooked", 1)
 	woodState := NewStateTemplate("wood", 0)
 	gasState := NewStateTemplate("gas", 0)
 	cookState.AddSubs(woodState,gasState)
