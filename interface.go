@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"github.com/fireagainsmile/fabric-chaincodes/components"
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
@@ -18,14 +19,25 @@ func (s *SimpleContract)CommitOrder(want string) error {
 }
 
 func (s *SimpleContract)ListOrders() string {
-	return s.or.ID
+	if s.or != nil {
+		return s.or.ID
+	}
+	return "nil"
 }
 
 func (s *SimpleContract)GetStatus() string {
-	return s.or.CurrentState.Name()
+	if s.or.CurrentState != nil {
+		return s.or.CurrentState.Name()
+	}else {
+		return "Done"
+	}
 }
 
 func (s *SimpleContract)ConfirmOrder(id string)  {
+	if s.or == nil {
+		fmt.Println("No order at the moment")
+		return
+	}
 	if s.or.ID == id{
 		s.or = nil
 		fmt.Println(id, ":Order Confirmed")
@@ -35,6 +47,9 @@ func (s *SimpleContract)ConfirmOrder(id string)  {
 }
 
 func (s *SimpleContract)ServeOder(op, message string) error {
+	if s.or == nil {
+		return errors.New("No order at this moment ")
+	}
 	s.or.HandleEvent(op, message)
 	return nil
 }

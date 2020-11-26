@@ -1,6 +1,7 @@
 package components
 
 import (
+	"errors"
 	"fmt"
 	"math/rand"
 	"time"
@@ -29,6 +30,10 @@ func NewOrderEvent(or string) *OrderEvent {
 }
 
 func (o *OrderEvent)HandleEvent(op , event string) *OrderEvent {
+	if o.CurrentState == nil {
+		o.Err = errors.New("no procedure is ongoing")
+		return o
+	}
 	err :=o.CurrentState.StateHandler(op, event)
 	if err != nil {
 		o.Err = err
