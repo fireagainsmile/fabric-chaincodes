@@ -1,9 +1,7 @@
 package components
 
 import (
-	"errors"
 	"fmt"
-	"strings"
 )
 
 type HosuseID int
@@ -60,37 +58,37 @@ func requireAuth()  {
 
 // functions used between modules
 // communication between different modules
-func (u *User)sendOrder(message , resId string)  *OrderEvent{
-	// todo channel communication
-	return DefaultOrg.DeliverOrder(message, resId)
-}
+//func (u *User)sendOrder(message , resId string)  *OrderEvent{
+//	// todo channel communication
+//	return DefaultOrg.DeliverOrder(message, resId)
+//}
 
 
 
 //  interfaces for users module
-func (u *User)CommitOrder(want,  resId string) error {
-	u.rulesCheck()
-	//OE := u.SentOrder(want)
-	oe := u.sendOrder(want, resId)
-	if oe == nil {
-		return errors.New("failed to create order")
-	}
-	u.orders[oe.ID] = oe
-	return nil
-}
-
-func (u *User)ConfirmOrder(want string, orderId string)  {
-	DefaultOrg.ConfirmOrder(want, orderId)
-}
-
-func (u *User)ListOrders() string  {
-	var res []string
-	for _, v := range u.orders{
-		res = append(res, v.ID)
-	}
-	return strings.Join(res,",")
-}
-
+//func (u *User)CommitOrder(want,  resId string) error {
+//	u.rulesCheck()
+//	//OE := u.SentOrder(want)
+//	oe := u.sendOrder(want, resId)
+//	if oe == nil {
+//		return errors.New("failed to create order")
+//	}
+//	u.orders[oe.ID] = oe
+//	return nil
+//}
+//
+//func (u *User)ConfirmOrder(want string, orderId string)  {
+//	DefaultOrg.ConfirmOrder(want, orderId)
+//}
+//
+//func (u *User)ListOrders() string  {
+//	var res []string
+//	for _, v := range u.orders{
+//		res = append(res, v.ID)
+//	}
+//	return strings.Join(res,",")
+//}
+//
 
 
 
