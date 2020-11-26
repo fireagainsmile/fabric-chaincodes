@@ -1,6 +1,7 @@
 package components
 
 import (
+	"errors"
 	"fmt"
 	"math/rand"
 	"time"
@@ -9,7 +10,7 @@ import (
 
 var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRST0123456789")
 
-type OrderEvent struct {
+type BusinessOrder struct {
 	ID string
 	OrderDetail string
 	CurrentState StateHandlerInterface
@@ -17,9 +18,9 @@ type OrderEvent struct {
 	Err error
 }
 
-func NewOrderEvent(or string) *OrderEvent {
+func NewOrder(or string) *BusinessOrder {
 	state := GenerateStates()
-	o := &OrderEvent{
+	o := &BusinessOrder{
 		ID: generateOrderID(),
 		OrderDetail: or,
 		CurrentState: state,
@@ -28,7 +29,11 @@ func NewOrderEvent(or string) *OrderEvent {
 	return o
 }
 
-func (o *OrderEvent)HandleEvent(op , event string) *OrderEvent {
+func (o *BusinessOrder)HandleEvent(op , event string) *BusinessOrder {
+	if o.CurrentState == nil {
+		o.Err = errors.New("no procedure is ongoing")
+		return o
+	}
 	err :=o.CurrentState.StateHandler(op, event)
 	if err != nil {
 		o.Err = err
@@ -43,12 +48,12 @@ func (o *OrderEvent)HandleEvent(op , event string) *OrderEvent {
 	return o
 }
 
-func (o *OrderEvent)Close()  {
+func (o *BusinessOrder)Close()  {
 	o.CurrentState = nil
 	close(o.Done)
 }
 
-func (o *OrderEvent)IsFinished() bool {
+func (o *BusinessOrder)IsFinished() bool {
 	return o.CurrentState == nil
 }
 

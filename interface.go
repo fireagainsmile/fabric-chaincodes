@@ -7,12 +7,12 @@ import (
 
 type SimpleContract struct {
 	contractapi.Contract
-	or *components.OrderEvent
+	or *components.BusinessOrder
 }
 
 //user interfaces
 func (s *SimpleContract)CommitOrder(want string) error {
-	 s.or = components.NewOrderEvent(want)
+	 s.or = components.NewOrder(want)
 	return nil
 }
 
