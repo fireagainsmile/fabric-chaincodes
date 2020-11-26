@@ -85,9 +85,11 @@ func (s *StateTemplate)StateHandler(op, message string) error  {
 		s.Update()
 	}
 	subs := s.Subs()
+	var matched bool
 	if len(subs) != 0 {
 		for _, ss := range subs{
 			if ss.Name() == op {
+				matched = true
 				if ss.IsFinished() {
 					fmt.Println("Sub operation is done!")
 					return errors.New("Sub operation is already finished! ")
@@ -99,9 +101,14 @@ func (s *StateTemplate)StateHandler(op, message string) error  {
 			}
 		}
 	}
-	s.Update()
+	if matched {
+		s.Update()
+		return nil
+	}else {
+		fmt.Println("no matched operation found!")
+		return errors.New("no matched operation found")
+	}
 
-	return nil
 }
 
 
