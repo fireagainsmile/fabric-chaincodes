@@ -43,7 +43,7 @@ func (o *BusinessOrder)HandleEvent(op , event string) *BusinessOrder {
 		if next == nil {
 			fmt.Println("Waiting for confirmation")
 		}
-		o.CurrentState = o.CurrentState.Next()
+		o.CurrentState = next
 	}
 	return o
 }
