@@ -21,7 +21,7 @@ type BusinessOrder struct {
 func NewOrder(or string) *BusinessOrder {
 	state := GenerateStates()
 	o := &BusinessOrder{
-		ID: generateOrderID(),
+		ID: "123456",
 		OrderDetail: or,
 		CurrentState: state,
 		Done: make(chan struct{}),
