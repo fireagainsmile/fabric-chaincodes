@@ -16,6 +16,7 @@ const (
 	SubClosed
 )
 
+
 // handler interface for different states
 type StateHandlerInterface interface {
 	StateHandler(operation, message string) error
@@ -60,6 +61,11 @@ func (s *StateTemplate)SetNext(handlerInterface StateHandlerInterface) *StateTem
 	return s
 }
 
+func (s *StateTemplate)SetThreshHold(n int) *StateTemplate {
+	s.ThreshHold = n
+	return s
+}
+
 func (s *StateTemplate)SetHandler(f func(string, string) error)  {
 	s.handler = f
 }
@@ -88,6 +94,9 @@ func (s *StateTemplate)GetInterfaceState() InterfaceState {
 
 func (s *StateTemplate)StateHandler(op, message string) error  {
 	var changed bool
+	if err := EventCheck(message); err != nil {
+		return err
+	}
 	if s.op == op {
 		if !s.isReadyForCurr(){
 			return errors.New("can not proceed any transaction at this moment! ")

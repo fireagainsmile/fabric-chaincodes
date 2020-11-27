@@ -9,9 +9,14 @@ import (
 type SimpleContract struct {
 	contractapi.Contract
 	or *components.BusinessOrder
+	pm *components.ProcedureManager
 }
 
 //user interfaces
+func (s *SimpleContract)Init()  {
+	s.pm = components.DefaultManager
+}
+
 func (s *SimpleContract)CommitOrder(want string) error {
 	 s.or = components.NewOrder(want)
 	return nil
@@ -52,3 +57,18 @@ func (s *SimpleContract)ServeOder(op, message string) error {
 	return nil
 }
 
+func (s *SimpleContract)CreateNewProcedure(procedureName, initialOp string) {
+	s.pm.CreateNewProcedure(procedureName, initialOp)
+}
+
+func (s *SimpleContract)ConfigureMainOps(procedureName string, ops ...string)  {
+	s.pm.ConfigureMainOps(procedureName, ops...)
+}
+
+func (s *SimpleContract)ConfigureSubs(procedureName, mainOpName string, subs ...string)  {
+	s.pm.ConfigureSubs(procedureName, mainOpName, subs...)
+}
+
+func(s *SimpleContract)SetThreshHold(procedureName, opName string, threshHold int) {
+	s.pm.SetThreshHold(procedureName, opName, threshHold)
+}
