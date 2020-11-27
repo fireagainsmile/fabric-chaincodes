@@ -42,7 +42,7 @@ func (s *SimpleContract)ConfirmOrder(id string) string {
 		fmt.Println(id, ":Order Confirmed")
 		return "Confirmed"
 	}else {
-		fmt.Println("no match order found")
+		fmt.Println("no match order found", s.or.ID, id)
 		return "order id does not match"
 	}
 }
