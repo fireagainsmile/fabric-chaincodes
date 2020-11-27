@@ -18,6 +18,9 @@ func (s *SimpleContract)CommitOrder(want string) error {
 }
 
 func (s *SimpleContract)ListOrders() string {
+	if s.or == nil {
+		return "no order exist"
+	}
 	return s.or.ID
 }
 
@@ -29,18 +32,18 @@ func (s *SimpleContract)GetStatus() string {
 	}
 }
 
-func (s *SimpleContract)ConfirmOrder(id string)  {
+func (s *SimpleContract)ConfirmOrder(id string) string {
 	if s.or == nil {
 		fmt.Println("No order at the moment")
-		return 
+		return "no order waiting confirmation"
 	}
 	if s.or.ID == id{
 		s.or = nil
 		fmt.Println(id, ":Order Confirmed")
-		return
+		return "Confirmed"
 	}else {
 		fmt.Println("no match order found")
-		return
+		return "order id does not match"
 	}
 }
 
