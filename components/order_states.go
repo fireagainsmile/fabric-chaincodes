@@ -87,6 +87,7 @@ func (s *StateTemplate)GetInterfaceState() InterfaceState {
 }
 
 func (s *StateTemplate)StateHandler(op, message string) error  {
+	var changed bool
 	if s.op == op {
 		if !s.isReadyForCurr(){
 			return errors.New("can not proceed any transaction at this moment! ")
@@ -95,7 +96,11 @@ func (s *StateTemplate)StateHandler(op, message string) error  {
 		if s.handler != nil {
 			return s.handler(op, message)
 		}
-		s.Update()
+		changed = true
+		if changed{
+			s.Update()
+		}
+		return nil
 	}
 	if !s.isReadyForSubs(){
 		return errors.New("can not handle sub operation! ")
@@ -107,12 +112,14 @@ func (s *StateTemplate)StateHandler(op, message string) error  {
 				if err := ss.StateHandler(op, message); err != nil {
 					return err
 				}
-				ss.Update()
+				changed = true
+				break
 			}
 		}
 	}
-	s.Update()
-
+	if changed {
+		s.Update()
+	}
 	return nil
 }
 

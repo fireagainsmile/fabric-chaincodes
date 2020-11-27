@@ -21,7 +21,7 @@ type BusinessOrder struct {
 func NewOrder(or string) *BusinessOrder {
 	state := GenerateStates()
 	o := &BusinessOrder{
-		ID: generateOrderID(),
+		ID: "123456",
 		OrderDetail: or,
 		CurrentState: state,
 		Done: make(chan struct{}),
@@ -43,7 +43,7 @@ func (o *BusinessOrder)HandleEvent(op , event string) *BusinessOrder {
 		if next == nil {
 			fmt.Println("Waiting for confirmation")
 		}
-		o.CurrentState = o.CurrentState.Next()
+		o.CurrentState = next
 	}
 	return o
 }
@@ -55,6 +55,13 @@ func (o *BusinessOrder)Close()  {
 
 func (o *BusinessOrder)IsFinished() bool {
 	return o.CurrentState == nil
+}
+
+func (o *BusinessOrder)GetStatus() string {
+	if o.CurrentState != nil {
+		return o.CurrentState.Name()
+	}
+	return "waiting for confirmation"
 }
 
 // help functions
