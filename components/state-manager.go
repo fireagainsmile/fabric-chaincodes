@@ -4,9 +4,9 @@ import "fmt"
 
 const (
 	MainOperationA string = "MainOperationA"
-	MainOperationB string = "MainOperationA"
-	MainOperationC string = "MainOperationA"
-	MainOperationD string = "MainOperationA"
+	MainOperationB string = "MainOperationB"
+	MainOperationC string = "MainOperationC"
+	MainOperationD string = "MainOperationD"
 
 	SubOperationA string = "SubOperationA"
 	SubOperationB string = "SubOperationB"
@@ -18,7 +18,7 @@ const (
 var (
 	mainOpList = []string{MainOperationA, MainOperationB, MainOperationC, MainOperationD}
 	subOpList = []string{SubOperationA, SubOperationB, SubOperationC, SubOperationD, SubOperationE}
-	DefaultManager = NewStateManager()
+	DefaultManager = NewProcedureManager()
 )
 
 type  procedure struct {
@@ -42,7 +42,7 @@ type ProcedureManager struct {
 }
 
 
-func NewStateManager() *ProcedureManager {
+func NewProcedureManager() *ProcedureManager {
 	return &ProcedureManager{
 		procedures: make(map[string]*procedure),
 	}
@@ -80,9 +80,11 @@ func (m *ProcedureManager)ConfigureMainOps(procedureName string, ops ...string) 
 		}
 	}
 
+	initial := p.initial
 	curOp := ops[0]
 	CurState := NewStateTemplate(curOp, -1)
 	p.states[curOp] = CurState
+	initial.SetNext(CurState)
 	for i := 1; i < len(ops); i++ {
 		nextOp := ops[i]
 		nextState := NewStateTemplate(nextOp, -1)
